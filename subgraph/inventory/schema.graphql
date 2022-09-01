@@ -1,0 +1,81 @@
+"""
+Defines the queryable fields for the Warehouse type
+"""
+type Warehouse @key(fields: "id") {
+  id: ID!
+  "The address for a warehouse"
+  address: Address
+  "A list of all the aisles in a warehouse"
+  aisles: [Aisle]
+}
+
+"""
+Defines the queryable fields for an Approximate Location
+"""
+type ApproxLocation @key(fields: "id") {
+  id: ID!
+  "The warehouse an item is located in"
+  warehouse: Warehouse
+  "The aisle an item is located in"
+  aisle: Aisle
+  "The bin an item is located in"
+  bin: Bin
+  "The number of items available in this location"
+  quantityOnHand: Int
+}
+
+"""
+Defines the queryable types for an Aisle
+"""
+type Aisle {
+  id: ID!
+  "A list of all the bins in an aisle"
+  bins: [Bin]
+}
+
+"""
+Defines the queryable types for a Bin
+"""
+type Bin {
+  shelfNumber: Int
+  "A list of all the products in a bin"
+  products: [ProductInventory]
+}
+
+"""
+Defines the queryable types for the Product Inventory
+"""
+type ProductInventory {
+  "The product in this inventory"
+  product: Product
+  "The quantity of the product in this inventory"
+  quantityOnHand: Int
+}
+
+extend type Order @key(fields: "id") {
+  id: ID! @external
+  "The warehouse the order will originate from"
+  origin: Warehouse
+}
+
+extend type Address @key(fields: "id") {
+  id: ID! @external
+}
+
+extend type Product @key(fields: "id") {
+  id: ID! @external
+  "The quantity of product in stock"
+  inventory: Int
+  "The delivery estimate for a product"
+  delivery(deliveryZipCode: Int): DeliveryEstimates
+}
+
+"""
+Defines the queryable fields for Delivery Estimates
+"""
+type DeliveryEstimates {
+  "The estimated delivery time"
+  estimatedDelivery: String
+  "The fastest possible delivery time"
+  fastestDelivery: String
+}

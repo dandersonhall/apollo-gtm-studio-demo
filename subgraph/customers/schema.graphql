@@ -1,0 +1,20 @@
+"""
+This type defines the queryable fields for a customer
+"""
+type Customer @key(fields: "id") {
+  id: ID!
+  "The customer's email address"
+  email: String
+  "The customer's contact phone number"
+  contactNumber: String
+  "The customer's default shipping address"
+  defaultShippingAddress: Address
+}
+
+extend type Address @key(fields: "id") {
+  id: ID! @external
+}
+
+extend type Query {
+  me: Customer
+}

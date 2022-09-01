@@ -1,0 +1,59 @@
+version: '3.3'
+
+services:
+  gateway:
+    image: gateway
+    environment:
+      - APOLLO_KEY
+      - APOLLO_GRAPH_REF
+    ports:
+      - "4000:3200"
+
+  checkouts:
+    depends_on:
+      - gateway
+    image: checkouts-subgraph
+    ports:
+      - "3200"
+
+  customers:
+    depends_on:
+      - gateway
+    image: customers-subgraph
+    ports:
+      - "3200"
+
+  inventory:
+    depends_on:
+      - gateway
+    image: inventory-subgraph
+    ports:
+      - "3200"
+  
+  locations:
+    depends_on:
+      - gateway
+    image: locations-subgraph
+    ports:
+      - "3200"
+
+  orders:
+    depends_on:
+      - gateway
+    image: orders-subgraph
+    ports:
+      - "3200"
+
+  products:
+    depends_on:
+      - gateway
+    image: products-subgraph
+    ports:
+      - "3200"
+
+  reviews:
+    depends_on:
+      - gateway
+    image: reviews-subgraph
+    ports:
+      - "3200"

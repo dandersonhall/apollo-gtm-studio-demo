@@ -1,0 +1,94 @@
+"""
+The Product type defines the queryable fields for all products
+"""
+type Product @key(fields: "id") {
+  id: ID! @tag(name: "public")
+  "The product name"
+  title: String @tag(name: "public")
+  "The url the product can be found at"
+  url: String @tag(name: "public")
+  "A description of the product"
+  description: String @tag(name: "public")
+  "The price of the product"
+  price: Price @tag(name: "public")
+  "The sales rank defines how well the product is selling. Best selling products have a lower rank"
+  salesRank(category: ProductCategory = ALL): Int @deprecated(reason: "Use `salesRankOverall` or `salesRankInCategory`")
+  "The sales rank defines how well the product is selling. Best selling products have a lower rank. This defines how well this product is selling compared to all other products"
+  salesRankOverall: Int
+  "This defines how well the product is selling within its own category. Best selling products have a lower rank"
+  salesRankInCategory: Int
+  "The product's category"
+  category: ProductCategory @tag(name: "public")
+  "Images to display for the product"
+  images(size: Int = 1000): [String] @tag(name: "public")
+  "Primary image to display for the product"
+  primaryImage(size: Int = 1000): String @tag(name: "public")
+}
+
+type Price @tag(name: "public") {
+  "The cost of the product"
+  cost: Money
+  "A number between 0 and 1 signifying the % discount"
+  deal: Float
+  "The amount of money saved by this deal"
+  dealSavings: Money
+}
+
+extend type Query {
+  "Returns the best selling products by category"
+  bestSellers(category: ProductCategory = ALL): [Product]
+  "Returns all the product categories"
+  categories: [Department]
+  "Search for a product by its ID"
+  product(id: ID!): Product @tag(name: "public")
+  "Return a paginated list of products"
+  products(first: Int = 5, from: Int = 0): [Product] @tag(name: "public")
+  "Return a list of products"
+  topProducts(first: Int = 5): [Product] @deprecated(reason: "Use `products`.")
+}
+
+"""
+This type defines all the queryable fields for a department
+"""
+type Department {
+  "The category of products this department sells"
+  category: ProductCategory
+  "URL for the department"
+  url: String
+}
+
+"""
+Defines all possible product categories
+"""
+enum ProductCategory {
+  ALL
+  GIFT_CARDS
+  ELECTRONICS
+  CAMERA_N_PHOTO
+  VIDEO_GAMES
+  BOOKS
+  CLOTHING
+}
+
+"""
+Defines the money a product can be sold for
+"""
+type Money @tag(name: "public") {
+  "The amount of money"
+  amount: Float
+  "The currency for this amount of money"
+  currencyCode: CURRENCY_CODE
+}
+"""
+Defines all currencies products can be sold in
+"""
+enum CURRENCY_CODE {
+  USD
+  EUR
+}
+
+directive @tag(name: String!) repeatable on
+  | FIELD_DEFINITION
+  | INTERFACE
+  | OBJECT
+  | UNION

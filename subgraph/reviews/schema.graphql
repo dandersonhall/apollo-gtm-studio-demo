@@ -1,0 +1,34 @@
+"""
+Defines the queryable fields for the Review type
+"""
+type Review @key(fields: "id") {
+  id: ID!
+  "The review's rating"
+  rating: Float
+  "The text content of the review"
+  content: String
+}
+
+extend type Product @key(fields: "id") {
+  id: ID! @external
+  "The reviews for a product"
+  reviews: [Review]
+  "The summary of all reviews for a product"
+  reviewSummary: ReviewSummary @tag(name: "public")
+}
+
+"""
+Defines the queryable fields for a review summary
+"""
+type ReviewSummary @tag(name: "public") {
+  "The total number of reviews in a review summary"
+  totalReviews: Int
+  "The average rating for the entity being reviewed"
+  averageRating: Float
+}
+
+directive @tag(name: String!) repeatable on
+  | FIELD_DEFINITION
+  | INTERFACE
+  | OBJECT
+  | UNION

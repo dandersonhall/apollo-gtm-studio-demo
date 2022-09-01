@@ -1,0 +1,81 @@
+"""
+Defines the queryable fields for the Order type
+"""
+type Order @key(fields: "id") {
+  id: ID!
+  "The address an order should be shipped to"
+  shippingAddress: Address
+  "The address an order should be billed to"
+  billingAddress: Address
+  "The status of the order"
+  status: ORDER_STATUS
+  "A list of all the items that have been ordered"
+  items: [LineItem]
+  "The notifactions sent to the phone associated with this order"
+  phoneNotifications: String
+  "Reason the order was cancelled"
+  cancelledReason: CANCELLED_REASON
+}
+
+extend type Warehouse @key(fields: "id") {
+  id: ID! @external
+}
+
+enum CANCELLED_REASON {
+  CUSTOMER
+  DECLINED
+  FRAUD
+  NO_INVENTORY
+  OTHER
+}
+
+"""
+Defines what is included in each line item of an order
+"""
+type LineItem {
+  "The line item's product"
+  product: Product
+  "The price of the line item"
+  dealPrice: Money
+  "The quantity of the line item's product ordered"
+  quantityOrdered: Int
+  "The location that the line item's product was stocked from"
+  stockedFrom: ApproxLocation
+}
+
+extend type ApproxLocation @key(fields: "id") {
+  id: ID! @external
+}
+
+extend type Product @key(fields: "id") {
+  id: ID! @external
+}
+
+enum ORDER_STATUS {
+  OPEN
+  IN_PROGRESS
+  SHIPPING
+  PARTIALLY_FULFILLED
+  FULFILLED
+  RETURNED
+  CANCELLED
+}
+
+extend type Address @key(fields: "id") {
+  id: ID! @external
+}
+
+extend type Customer @key(fields: "id") {
+  id: ID! @external
+  "The customer's order history"
+  orderHistory: [Order]
+}
+
+type Money {
+  amount: Float
+  currencyCode: CURRENCY_CODE
+}
+enum CURRENCY_CODE {
+  USD
+  EUR
+}

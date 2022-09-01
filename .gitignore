@@ -1,0 +1,14 @@
+**/node_modules/
+package-lock.json
+.DS_Store
+**.env
+**.code-workspace
+**/service-account-key.json
+__pycache__
+cloudbuild.yaml
+*env/*
+.terraform*
+*.tfstate*
+*.tfvars
+build-api-config.json
+api-config.yml

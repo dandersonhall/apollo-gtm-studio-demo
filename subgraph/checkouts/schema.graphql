@@ -1,0 +1,49 @@
+type Money {
+  amount: Float
+  currencyCode: CURRENCY_CODE
+}
+enum CURRENCY_CODE {
+  USD
+  EUR
+}
+
+"""
+Defines the queryable fields for the Checkout type
+"""
+type Checkout @key(fields: "id") {
+  id: ID!
+  "Details of the order being checked out"
+  order: Order
+  "Status of the checkout process"
+  status: CART_STATUS
+  "Details for the customer checking out"
+  customer: Customer
+  "Subtotal for the order being checked out"
+  subtotal: Money
+  "Taxes for the order being checked out"
+  taxes: Money
+  "Total cost of the shipping"
+  shipping: Money
+  "Total amount of money to be paid for the order being checked out"
+  total: Money
+}
+
+extend type Order @key(fields: "id") {
+  id: ID! @external
+}
+
+extend type Customer @key(fields: "id") {
+  id: ID! @external
+  "The items saved to a customer's cart"
+  activeCart: Checkout
+  "The items saved to a customer's list"
+  savedLists: Checkout
+}
+
+enum CART_STATUS {
+  DELETED #Intentional by the user
+  IN_PROGRESS
+  PAID
+  COMPLETED
+  ABANDONED #After a certain period of inactivity time on cart
+}

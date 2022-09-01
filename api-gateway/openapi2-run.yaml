@@ -1,0 +1,61 @@
+# openapi2-run.yaml
+swagger: '2.0'
+info:
+  title: cse-studio-demo-api
+  description: API for the GTM Apollo Studio Demo environment
+  version: 1.0.0
+schemes:
+- https
+produces:
+- application/json
+paths:
+  /ecomm-fed1/production:
+    post:
+      summary: GraphQL request to Ecomm Fed1 Production Gateway
+      operationId: ecomm-fed1-prod-post
+      x-google-backend:
+        address: https://e-commerce-fed1-production-gateway-bg2flhkqqa-ue.a.run.app
+      security:
+        - api_key: []
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+    options:
+      summary: Handle CORS requests
+      operationId: ecomm-fed1-prod-options
+      x-google-backend:
+        address: https://e-commerce-fed1-production-gateway-bg2flhkqqa-ue.a.run.app
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+  /ecomm-fed1/public-production:
+    post:
+      summary: GraphQL request to Ecomm Fed1 Public Gateway
+      operationId: ecomm-fed1-public-post
+      x-google-backend:
+        address: https://e-commerce-fed1-public-production-gateway-bg2flhkqqa-ue.a.run.app
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+    options:
+      summary: Handle CORS requests
+      operationId: ecomm-fed1-public-options
+      x-google-backend:
+        address: https://e-commerce-fed1-public-production-gateway-bg2flhkqqa-ue.a.run.app
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: string
+securityDefinitions:
+  # This section configures basic authentication with an API key.
+  api_key:
+    type: "apiKey"
+    name: "x-api-key"
+    in: "header"
